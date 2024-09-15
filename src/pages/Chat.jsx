@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 const Chat = () => {
   const { t } = useTranslation();
   const [prompt, setPrompt] = useState('');
-  const [response, setResponse] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
 
   const { refetch, isFetching } = useQuery({
     queryKey: ['prompt'],
@@ -36,7 +36,10 @@ const Chat = () => {
         if (done) break;
         const chunk = decoder.decode(value);
         result += chunk;
-        setResponse(prevResponse => prevResponse + chunk);
+        setChatHistory(prevHistory => [
+          ...prevHistory,
+          { type: 'system', content: chunk }
+        ]);
       }
 
       return result;
@@ -46,13 +49,37 @@ const Chat = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setResponse('');
+    setChatHistory(prevHistory => [
+      ...prevHistory,
+      { type: 'user', content: prompt }
+    ]);
     refetch();
+    setPrompt('');
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 flex flex-col h-screen">
       <h2 className="text-2xl font-bold mb-4">{t('chat')}</h2>
+      <div className="flex-grow overflow-y-auto mb-4 bg-gray-100 p-4 rounded-lg">
+        {chatHistory.map((message, index) => (
+          <div
+            key={index}
+            className={`mb-4 ${
+              message.type === 'user' ? 'text-right' : 'text-left'
+            }`}
+          >
+            <div
+              className={`inline-block p-3 rounded-lg ${
+                message.type === 'user'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white text-black'
+              }`}
+            >
+              {message.content}
+            </div>
+          </div>
+        ))}
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <Textarea
           value={prompt}
@@ -64,12 +91,6 @@ const Chat = () => {
           {isFetching ? t('processing') : t('send')}
         </Button>
       </form>
-      {response && (
-        <div className="mt-8">
-          <h3 className="text-xl font-bold mb-2">{t('response')}:</h3>
-          <pre className="bg-gray-100 p-4 rounded whitespace-pre-wrap">{response}</pre>
-        </div>
-      )}
     </div>
   );
 };
