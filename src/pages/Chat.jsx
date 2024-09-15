@@ -42,10 +42,15 @@ const Chat = () => {
         try {
           const jsonChunk = JSON.parse(chunk);
           result += jsonChunk.response;
-          setChatHistory(prevHistory => [
-            ...prevHistory,
-            { type: 'system', content: jsonChunk.response }
-          ]);
+          setChatHistory(prevHistory => {
+            const newHistory = [...prevHistory];
+            if (newHistory.length > 0 && newHistory[newHistory.length - 1].type === 'system') {
+              newHistory[newHistory.length - 1].content += jsonChunk.response;
+            } else {
+              newHistory.push({ type: 'system', content: jsonChunk.response });
+            }
+            return newHistory;
+          });
         } catch (error) {
           console.error('Error parsing JSON:', error);
         }
@@ -96,30 +101,27 @@ const Chat = () => {
         style={{ maxHeight: 'calc(100vh - 300px)' }}
       >
         {chatHistory.map((message, index) => (
-          <div
-            key={index}
-            className={`mb-4 ${
-              message.type === 'user' ? 'text-right' : 'text-left'
-            }`}
-          >
+          <div key={index} className="mb-4">
+            {message.type === 'system' && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => copyToClipboard(message.content)}
+                className="mb-2"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy
+              </Button>
+            )}
             <div
-              className={`inline-block p-3 rounded-lg ${
+              className={`p-3 rounded-lg ${
                 message.type === 'user'
-                  ? 'bg-blue-500 text-white'
+                  ? 'bg-blue-500 text-white ml-auto'
                   : 'bg-white text-black'
               }`}
+              style={{ maxWidth: '80%', wordWrap: 'break-word' }}
             >
               {message.content}
-              {message.type === 'system' && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => copyToClipboard(message.content)}
-                  className="ml-2"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              )}
             </div>
           </div>
         ))}
