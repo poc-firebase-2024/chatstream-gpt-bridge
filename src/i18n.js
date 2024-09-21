@@ -33,6 +33,8 @@ i18n
           delete: 'Delete',
           editModel: 'Edit Model',
           save: 'Save',
+          models: 'Models',
+          home: 'Home',
         },
       },
       pt: {
@@ -63,6 +65,8 @@ i18n
           delete: 'Excluir',
           editModel: 'Editar Modelo',
           save: 'Salvar',
+          models: 'Modelos',
+          home: 'Início',
         },
       },
     },

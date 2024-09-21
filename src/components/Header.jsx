@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import LoginModal from './LoginModal';
+import { Link } from 'react-router-dom';
+import { navItems } from '../nav-items';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -22,7 +24,14 @@ const Header = () => {
           <SheetContent side="left">
             <nav>
               <ul>
-                <li><a href="/chat">{t('chat')}</a></li>
+                {navItems.map((item) => (
+                  <li key={item.to} className="py-2">
+                    <Link to={item.to} className="flex items-center space-x-2">
+                      {item.icon}
+                      <span>{t(item.title.toLowerCase())}</span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </nav>
           </SheetContent>

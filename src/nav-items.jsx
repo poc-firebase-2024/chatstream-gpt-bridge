@@ -1,4 +1,4 @@
-import { MessageSquare, Settings } from "lucide-react";
+import { MessageSquare, Settings, Database } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Chat from "./pages/Chat.jsx";
 import ModelManagement from "./pages/ModelManagement.jsx";
@@ -17,9 +17,9 @@ export const navItems = [
     page: <Chat />,
   },
   {
-    title: "Model Management",
+    title: "Models",
     to: "/models",
-    icon: <Settings className="h-4 w-4" />,
+    icon: <Database className="h-4 w-4" />,
     page: <ModelManagement />,
   },
 ];
