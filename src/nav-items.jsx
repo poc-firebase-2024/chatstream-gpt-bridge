@@ -1,6 +1,7 @@
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Settings } from "lucide-react";
 import Index from "./pages/Index.jsx";
 import Chat from "./pages/Chat.jsx";
+import ModelManagement from "./pages/ModelManagement.jsx";
 
 export const navItems = [
   {
@@ -14,5 +15,11 @@ export const navItems = [
     to: "/chat",
     icon: <MessageSquare className="h-4 w-4" />,
     page: <Chat />,
+  },
+  {
+    title: "Model Management",
+    to: "/models",
+    icon: <Settings className="h-4 w-4" />,
+    page: <ModelManagement />,
   },
 ];
